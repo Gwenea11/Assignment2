@@ -149,13 +149,12 @@ public class SimpleList {
 	
 	
 	
-	
 	/**
 	 * Returns the length of the array list. 
 	 * 
 	 * @return the integer value for length of list
 	 */
-	public int length() {
+	public int size() {
 		return list.length; 
 	}
 	
@@ -191,4 +190,61 @@ public class SimpleList {
 		}
 		return location; 
 	}
+	
+	
+	
+	/**
+	 * Appends an element to the back of the list. If the list is full, will increase the list by 50%
+	 * and then append the element 
+	 * 
+	 * @param appendee the integer to be appended 
+	 */
+	public void append(int appendee) {
+		int[] temp; 
+		
+		//if list is full
+		if(count == list.length) {
+			int increase = (int) (list.length * 0.5);
+			temp = list; 
+			list = new int[count + increase];	//increase array by 50%
+					
+			for(int index = 0; index < count; index++)
+				list[index] = temp[index]; 
+					
+			//append new int
+			list[count] = appendee;
+			count++;
+		}
+		else {
+			list[count] = appendee;
+			count++;
+		}
+	}
+	
+	
+	/**
+	 * Returns the first element in the list, -1 if the list is empty. 
+	 * 
+	 * @return either the first element in the list or -1
+	 */
+	public int first() {
+		if(count > 0) 
+			return list[0];
+		else
+			return -1; 
+	}
+		
+		
+	
+	/**
+	 * Returns the last element in the list, -1 if the list is empty. 
+	 * 
+	 * @return either the last element in the list or -1
+	 */
+	public int last() {
+		if(count > 0) 
+			return list[count - 1];
+		else
+			return -1; 
+	}	
 }

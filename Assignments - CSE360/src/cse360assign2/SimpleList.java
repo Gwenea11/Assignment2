@@ -34,48 +34,106 @@ public class SimpleList {
 	 * @param newInt the new integer to be added to the list
 	 */
 	public void add(int newInt) {
-		if(count == 0) {
+		int increase = 0; 	//amount to increase array
+		int[] temp; 
+		
+		
+		if(count == 0) { //when the list is empty
 			list[0] = newInt; 
 			count++; 
 		}
-		else if (count > 0 && count < 10) {	//when the list isn't full
+		
+		else if (count == list.length){	//when the list is full 
+			increase = (int) (list.length * 0.5); 	//set the amount to increase the array
+			temp = list;			
+			
+			list = new int[count + increase]; 	//increase list by 50% 
+			
+			//copy elements back into array
+			for(int index = 0; index < count; index++) {
+				list[index + 1] = temp[index];  
+			}
+			
+			list[0] = newInt; 
+			count++; 
+		}
+		
+		else {	//when the list isn't full
 			for (int index = (count - 1); index >= 0; index--) {
 				list[index + 1] = list[index];	//set the next element to the previous element 				
 			}
 			list[0] = newInt; 
 			count++;
 		}
-		else {	//when the list is full 
-			for(int index = 9; index > 0; index--) {
-				list[index] = list[index - 1]; 
-				list[0] = newInt; 
-			}
-		}
+		
 	}
 	
 	
 	
 	/**
 	 * Removes all occurrences of an element from the list, will shift all following elements left if the element
-	 * exists. If it doesn't exist, the array will be unchanged.  
+	 * exists. If it doesn't exist, the array will be unchanged. **An empty index is denoted by '0'.**   
 	 * 
 	 * @param key the element to be removed if it exists 
 	 */
 	public void remove(int key) {
 		int locale = search(key);	//index for element to be removed
+		int decrease = 0; 			//amount to decrease list by
+		int amountEmpty; 		//amount of empty indexes in list
+		int[] temp; 
+		boolean isLarger = true; 
+		int exists = locale; 
 		
 		while(locale != -1) {
-			if(locale == 9) {	//when element is the last element of the array 
+			if(locale == (count - 1)) {	//when element is the last element of the array 
+				list[count - 1] = 0; 
 				count--;	
 		    }
 			else {
 				for(int index = locale; index < (count - 1); index++) 
 					list[index] = list[index + 1];
-				
+				list[count - 1] = 0; 
 				count--; 
 			}
 			
 			locale = search(key); 
+		}
+		
+		
+		while (isLarger && exists != -1) {
+			decrease = (int) (list.length * .25); 	//25% of the length of the array
+			amountEmpty = 0; 
+			
+			//count how many empty indexes; empty indexes contain '0'
+			for(int index = 0; index < list.length; index++) {
+				if(list[index] == 0)
+					amountEmpty++; 
+			}
+			
+			//if the amount empty exceeds 25% of the array
+			if (amountEmpty > decrease) {
+				temp = list; 
+				list = new int[list.length - decrease]; 
+				
+				for (int index = 0; index < count; index++)
+					list[index] = temp[index]; 
+			}
+			
+			
+			//=================================================
+			//check the new array
+			//=================================================
+			decrease = (int) (list.length * .25); 	//25% of the length of the new array
+			amountEmpty = 0; 
+			
+			//count how many empty indexes in new array; empty indexes contain '0'
+			for(int index = 0; index < list.length; index++) {
+				if(list[index] == 0)
+					amountEmpty++; 
+			}
+			
+			if (amountEmpty <= decrease || list.length == 3)
+				isLarger = false; 
 		}
 	}
 	
@@ -89,6 +147,17 @@ public class SimpleList {
 		return count; 
 	}
 	
+	
+	
+	
+	/**
+	 * Returns the length of the array list. 
+	 * 
+	 * @return the integer value for length of list
+	 */
+	public int length() {
+		return list.length; 
+	}
 	
 	
 	/**
@@ -114,10 +183,10 @@ public class SimpleList {
 	 */
 	public int search(int key) {
 		int location = -1; 
-		for(int index = 0; index < (count - 1); index++) {
+		for(int index = 0; index < count ; index++) {
 			if (list[index] == key) {
 				location = index;
-				index += 10; 		//break to return the first occurrence of key
+				index += 1000; 		//break to return the first occurrence of key
 			}
 		}
 		return location; 
